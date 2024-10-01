@@ -2,14 +2,17 @@ const express = require("express");
 const Voter = require("../Models/Voter");
 const Candidate = require("../Models/Candidate");
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Signup route
 router.post("/signup", async (req, res) => {
-  const { name, username, email, contact, aadharCardNumber, password, role } =
+  let { name, username, email, contact, aadharCardNumber, password, role } =
     req.body;
 
-  try {
+  try { 
+    const saltpass = await bcrypt.genSalt(10);
+    const hashpass = await bcrypt.hash(password, saltpass);
+    console.log("hashpass",hashpass,password);
     if (role === "voter") {
       const newVoter = new Voter({
         name,
@@ -17,7 +20,7 @@ router.post("/signup", async (req, res) => {
         email,
         contact,
         aadharCardNumber,
-        password,
+        password:hashpass,
       });
       await newVoter.save();
       return res.status(201).json({ message: "Voter registered successfully" });
@@ -28,7 +31,7 @@ router.post("/signup", async (req, res) => {
         email,
         contact,
         aadharCardNumber,
-        password,
+        password:hashpass,
       });
       await newCandidate.save();
       return res
@@ -44,7 +47,7 @@ router.post("/signup", async (req, res) => {
 
 // Login Route
 router.post("/login", async (req, res) => {
-  const { aadharCardNumber, password, role } = req.body;
+  let { aadharCardNumber, password, role } = req.body;
 
   try {
     let user;
@@ -60,15 +63,18 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await user.comparePassword(password);
+    console.log("User found:", user.password,password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Compare result:", isMatch);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Wrong Pass" });
     }
-    console.log("User Found") ;
+    console.log("User Found");
     return res.status(200).json({
       message: "Login successful",
       user: {
-        // _id: user._id.toString(),
+        _id: user._id,
         name: user.name,
         username: user.username,
         email: user.email,
@@ -104,7 +110,7 @@ router.put('/change-password', async (req, res) => {
     // Check if the current password is correct
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      console.log('Current password is incorrect for user:', user.username);
+      console.log('Current password is incorrect for user:', currentPassword," ",isMatch);
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
     console.log('Current password verified for user:', user.username);
@@ -124,6 +130,5 @@ router.put('/change-password', async (req, res) => {
 });
 
 
-module.exports = router;
 
 module.exports = router;
