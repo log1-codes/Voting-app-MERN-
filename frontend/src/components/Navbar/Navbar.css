@@ -1,0 +1,23 @@
+.Navbar {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: transparent;
+  border: 1px solid black;
+  padding: 10px 12px;
+}
+.nav-left{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+.right-nav{
+    display: flex;
+    gap: 20px;
+}
+.buttons{ 
+    padding: 8px 12px ;
+    background: none;
+    cursor: pointer;
+}

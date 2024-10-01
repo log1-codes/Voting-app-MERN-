@@ -1,0 +1,144 @@
+.profile-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  h1, h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  .profile-info {
+    margin-bottom: 30px;
+  }
+  
+  .profile-info p {
+    margin: 15px 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  .profile-info strong {
+    color: #333;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  
+  .profile-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .buttons {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .buttons:hover {
+    background-color: #45a049;
+  }
+  
+  .edit-popup, .password-change-popup {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edit-popup input, .password-change-popup input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .password-change-popup {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .password-change-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .error {
+    color: #ff0000;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 650px) {
+    .profile-container {
+      margin: 10px;
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 24px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    .profile-info p {
+      font-size: 14px;
+    }
+  
+    .profile-actions, .password-change-actions {
+      flex-direction: column;
+    }
+  
+    .buttons {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .profile-container {
+      padding: 15px;
+    }
+  
+    h1 {
+      font-size: 22px;
+    }
+  
+    h2 {
+      font-size: 18px;
+    }
+  
+    .profile-info p {
+      font-size: 13px;
+    }
+  
+    .buttons {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
