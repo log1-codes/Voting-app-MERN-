@@ -108,16 +108,17 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <ToastContainer />
-      <div className="profile-header">
-        <img 
-          src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`} 
-          alt={user.name} 
-          className="profile-image" 
-        />
-        <h1>{user.name}</h1>
-        <p className="role">{user.role}</p>
-      </div>
+      <h1 className="profile-title">User Profile</h1>
       <div className="profile-content">
+        <div className="profile-header">
+          <img 
+            src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`} 
+            alt={user.name} 
+            className="profile-image" 
+          />
+          <h2 className="animate-text">{user.name}</h2>
+          <p className="role animate-text">{user.role}</p>
+        </div>
         <div className="profile-info">
           {!isEditing ? (
             <>
@@ -128,28 +129,28 @@ const Profile = () => {
             </>
           ) : (
             <div className="edit-form">
-              <input name="name" value={editedUser.name} onChange={handleInputChange} placeholder="Name" />
-              <input name="email" value={editedUser.email} onChange={handleInputChange} placeholder="Email" />
-              <input name="contact" value={editedUser.contact} onChange={handleInputChange} placeholder="Mobile" />
-              <input name="aadharCardNumber" value={editedUser.aadharCardNumber} onChange={handleInputChange} placeholder="Aadhar Card Number" />
+              <input name="name" value={editedUser.name} onChange={handleInputChange} placeholder="Name" className="animate-input" />
+              <input name="email" value={editedUser.email} onChange={handleInputChange} placeholder="Email" className="animate-input" />
+              <input name="contact" value={editedUser.contact} onChange={handleInputChange} placeholder="Mobile" className="animate-input" />
+              <input name="aadharCardNumber" value={editedUser.aadharCardNumber} onChange={handleInputChange} placeholder="Aadhar Card Number" className="animate-input" />
             </div>
           )}
         </div>
         <div className="profile-actions">
           {!isEditing && !isChangingPassword ? (
             <>
-              <button className="btn btn-primary" onClick={handleChangePassword}><FaLock /> Change Password</button>
-              <button className="btn btn-secondary" onClick={handleEditProfile}><FaEdit /> Edit Profile</button>
+              <button className="btn btn-primary animate-btn" onClick={handleChangePassword}><FaLock /> Change Password</button>
+              <button className="btn btn-secondary animate-btn" onClick={handleEditProfile}><FaEdit /> Edit Profile</button>
             </>
           ) : isEditing ? (
             <>
-              <button className="btn btn-primary" onClick={handleSaveProfile}><FaSave /> Save</button>
-              <button className="btn btn-secondary" onClick={handleCancelEdit}><FaTimes /> Cancel</button>
+              <button className="btn btn-primary animate-btn" onClick={handleSaveProfile}><FaSave /> Save</button>
+              <button className="btn btn-secondary animate-btn" onClick={handleCancelEdit}><FaTimes /> Cancel</button>
             </>
           ) : null}
         </div>
         {isChangingPassword && (
-          <div className="password-change-form">
+          <div className="password-change-form animate-form">
             <h2>Change Password</h2>
             <form onSubmit={handlePasswordSubmit}>
               <input
@@ -159,6 +160,7 @@ const Profile = () => {
                 onChange={handlePasswordInputChange}
                 placeholder="Current Password"
                 required
+                className="animate-input"
               />
               <input
                 type="password"
@@ -167,6 +169,7 @@ const Profile = () => {
                 onChange={handlePasswordInputChange}
                 placeholder="New Password"
                 required
+                className="animate-input"
               />
               <input
                 type="password"
@@ -175,11 +178,12 @@ const Profile = () => {
                 onChange={handlePasswordInputChange}
                 placeholder="Confirm New Password"
                 required
+                className="animate-input"
               />
               {passwordError && <p className="error">{passwordError}</p>}
               <div className="password-change-actions">
-                <button type="submit" className="btn btn-primary">Change Password</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setIsChangingPassword(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary animate-btn">Change Password</button>
+                <button type="button" className="btn btn-secondary animate-btn" onClick={() => setIsChangingPassword(false)}>Cancel</button>
               </div>
             </form>
           </div>
@@ -190,7 +194,7 @@ const Profile = () => {
 };
 
 const InfoItem = ({ icon, label, value }) => (
-  <div className="info-item">
+  <div className="info-item animate-info">
     {icon}
     <span className="label">{label}:</span>
     <span className="value">{value}</span>

@@ -1,6 +1,8 @@
+
+
 .Navbar {
     width: 100%;
-    background: linear-gradient(to right, #4a00e0, #8e2de2);
+    background: linear-gradient(to right, #6C63FF, #4CAF50);
     position: fixed;
     top: 0;
     left: 0;
@@ -65,14 +67,44 @@
       height: 100vh;
       width: 70%;
       max-width: 300px;
-      background: linear-gradient(to bottom, #4a00e0, #8e2de2);
+      background: linear-gradient(135deg, #6C63FF, #4CAF50, #6C63FF, #4CAF50);
+      background-size: 300% 300%;
       flex-direction: column;
       padding: 50px 20px;
-      transition: right 0.3s ease-in-out;
+      transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      overflow-y: auto;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    }
+  
+    .nav-items::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(108, 99, 255, 0.5) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(76, 175, 80, 0.5) 0%, transparent 30%);
+      filter: blur(100px);
+      z-index: -1;
     }
   
     .nav-items.active {
       right: 0;
+      animation: gradientFlow 15s ease infinite;
+    }
+  
+    @keyframes gradientFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
   
     .mobile-menu-toggle {
@@ -81,11 +113,56 @@
   
     .nav-items li {
       font-size: 1.2rem;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  
+    .nav-items.active li {
+      opacity: 1;
+      transform: translateX(0);
+      animation: fadeInRight 0.5s ease forwards;
+    }
+  
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  
+    .nav-items li:nth-child(1) { animation-delay: 0.1s; }
+    .nav-items li:nth-child(2) { animation-delay: 0.2s; }
+    .nav-items li:nth-child(3) { animation-delay: 0.3s; }
+    .nav-items li:nth-child(4) { animation-delay: 0.4s; }
+  
+    .nav-items li::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #ffffff, transparent);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+  
+    .nav-items li:hover::after {
+      transform: scaleX(1);
     }
   }
   
   @media (max-width: 480px) {
     .logo h2 {
       font-size: 1.2rem;
+    }
+  
+    .nav-items {
+      width: 80%;
     }
   }

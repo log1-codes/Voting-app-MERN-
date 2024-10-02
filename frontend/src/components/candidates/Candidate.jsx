@@ -4,6 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import './Candidate.css';
+import { FaVoteYea, FaUserCircle, FaEnvelope, FaPhone, FaPoll } from 'react-icons/fa';
 
 const Candidate = () => {
   const [candidates, setCandidates] = useState([]);
@@ -75,21 +76,23 @@ const Candidate = () => {
       <div className="candidate-list">
         {candidates.map((candidate) => (
           <div key={candidate._id} className="candidate-card">
-            <img 
-              src={`https://api.dicebear.com/6.x/initials/svg?seed=${candidate.name}`} 
-              alt={candidate.name} 
-              className="candidate-image" 
-            />
-            <h2 className="candidate-name">{candidate.name}</h2>
-            <p><strong>Username:</strong> {candidate.username}</p>
-            <p><strong>Email:</strong> {candidate.email}</p>
-            <p><strong>Contact:</strong> {candidate.contact}</p>
-            <p><strong>Votes:</strong> {candidate.voteCount}</p>
-            {user && user.role === 'voter' && !user.hasVoted && (
-              <button onClick={() => handleVote(candidate.aadharCardNumber)} className="vote-button">
-                Vote
-              </button>
-            )}
+            <div className="candidate-card-inner">
+              <img 
+                src={`https://api.dicebear.com/6.x/initials/svg?seed=${candidate.name}`} 
+                alt={candidate.name} 
+                className="candidate-image" 
+              />
+              <h2 className="candidate-name">{candidate.name}</h2>
+              <p><FaUserCircle className="icon" /> {candidate.username}</p>
+              <p><FaEnvelope className="icon" /> {candidate.email}</p>
+              <p><FaPhone className="icon" /> {candidate.contact}</p>
+              <p><FaPoll className="icon" /> Votes: {candidate.voteCount}</p>
+              {user && user.role === 'voter' && !user.hasVoted && (
+                <button onClick={() => handleVote(candidate.aadharCardNumber)} className="vote-button">
+                  <FaVoteYea className="icon" /> Vote
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
