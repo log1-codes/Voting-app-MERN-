@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
 import './Candidate.css';
 
 const Candidate = () => {
@@ -30,6 +31,11 @@ const Candidate = () => {
   };
 
   const handleVote = async (candidateAadharCardNumber) => {
+    if (!user) {
+      toast.error('Please log in to vote');
+      return;
+    }
+
     if (user.role !== 'voter') {
       toast.error('Only voters can cast votes');
       return;
@@ -53,14 +59,19 @@ const Candidate = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!candidates || candidates.length === 0) return <div>No candidates available</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">{error}</div>;
+  if (!candidates || candidates.length === 0) return <div className="no-candidates">No candidates available</div>;
 
   return (
     <div className="candidate-container">
       <ToastContainer />
-      <h1>Candidates</h1>
+      <h1 className="candidate-title">Candidates</h1>
+      {!user && (
+        <div className="login-message">
+          Please <Link to="/login">log in</Link> to vote.
+        </div>
+      )}
       <div className="candidate-list">
         {candidates.map((candidate) => (
           <div key={candidate._id} className="candidate-card">
@@ -69,12 +80,12 @@ const Candidate = () => {
               alt={candidate.name} 
               className="candidate-image" 
             />
-            <h2>{candidate.name}</h2>
+            <h2 className="candidate-name">{candidate.name}</h2>
             <p><strong>Username:</strong> {candidate.username}</p>
             <p><strong>Email:</strong> {candidate.email}</p>
             <p><strong>Contact:</strong> {candidate.contact}</p>
             <p><strong>Votes:</strong> {candidate.voteCount}</p>
-            {user.role === 'voter' && !user.hasVoted && (
+            {user && user.role === 'voter' && !user.hasVoted && (
               <button onClick={() => handleVote(candidate.aadharCardNumber)} className="vote-button">
                 Vote
               </button>

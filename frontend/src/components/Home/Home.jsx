@@ -1,20 +1,35 @@
 import React from 'react';
 import './Home.css';
-import votingImage from '../../assets/election.jpg';
+import { FaVoteYea, FaUserCheck, FaChartBar } from 'react-icons/fa';
+
 const Home = () => {
   return (
     <div className="home-container">
-      <h1 className="home-title">Your Voice Matters</h1>
-      <p className="home-description">
-        Be part of the democratic process. Discover upcoming elections, learn about
-        important issues, and cast your vote to shape the future of your community.
-      </p>
-      <div className="home-cta-container">
-        <p className="home-cta">Explore Upcoming Elections</p>
-        <p className="home-cta">Learn About Voting Procedures</p>
-        <p className="home-cta">Stay Informed on Current Issues</p>
+      <div className="home-hero">
+        <h1 className="home-title">Make The Right Choice</h1>
+        <p className="home-subtitle">Your vote is your voice in shaping our future</p>
       </div>
-      <img src={votingImage} alt="Voting Image" className="home-image" />
+      <div className="home-features">
+        <div className="feature-card">
+          <FaVoteYea className="feature-icon" />
+          <h2>Cast Your Vote</h2>
+          <p>Securely vote for your preferred candidates</p>
+        </div>
+        <div className="feature-card">
+          <FaUserCheck className="feature-icon" />
+          <h2>View Candidates</h2>
+          <p>Learn about the candidates and their platforms</p>
+        </div>
+        <div className="feature-card">
+          <FaChartBar className="feature-icon" />
+          <h2>Live Results</h2>
+          <p>Stay updated with real-time election results</p>
+        </div>
+      </div>
+      <div className="home-cta">
+        <h2>Ready to make a difference?</h2>
+        <button className="cta-button">Get Started</button>
+      </div>
     </div>
   );
 };

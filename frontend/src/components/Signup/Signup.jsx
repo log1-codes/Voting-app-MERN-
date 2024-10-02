@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Signup.css';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaLock, FaUserCircle } from 'react-icons/fa';
 const Signup = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -11,7 +11,7 @@ const Signup = () => {
         contact: '',
         aadharCardNumber: '',
         password: '',
-        role: 'voter' // Default role
+        role: 'voter'
     });
 
     const navigate = useNavigate();
@@ -20,6 +20,7 @@ const Signup = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -30,29 +31,27 @@ const Signup = () => {
                 },
                 body: JSON.stringify(formData),
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(`HTTP error! Status: ${response.status} - ${errorData.message || 'Unknown error'}`);
             }
-    
+
             const data = await response.json();
-            console.log('Signup response:', data);  // Log the response
-    
+            console.log('Signup response:', data);
+
             if (data.user) {
-                // If the backend sends user data, store it
                 const userDataToStore = { ...data.user };
-                delete userDataToStore.password;  // Remove password for security
+                delete userDataToStore.password;
                 localStorage.setItem('user', JSON.stringify(userDataToStore));
-                console.log('Stored user data:', userDataToStore);  // Log stored data
+                console.log('Stored user data:', userDataToStore);
                 toast.success(`Signup Successful, Welcome ${data.user.name}`);
                 navigate('/login');
             } else {
-                // If no user data is sent, store the form data (except password)
                 const userDataToStore = { ...formData };
                 delete userDataToStore.password;
                 localStorage.setItem('user', JSON.stringify(userDataToStore));
-                console.log('Stored form data:', userDataToStore);  // Log stored data
+                console.log('Stored form data:', userDataToStore);
                 toast.success(`Signup Successful, Welcome ${formData.name}`);
                 navigate('/login');
             }
@@ -63,41 +62,44 @@ const Signup = () => {
     };
 
     return (
-        <div className="signUp">
-            <form onSubmit={handleSubmit}>
-                <label>Name:
-                    <input type="text" name="name" placeholder='Enter your Name here' onChange={handleChange} required />
-                </label>
-                <br />
-                <label>Username:
-                    <input type="text" name="username" placeholder='Enter your Username here' onChange={handleChange} required />
-                </label>
-                <br />
-                <label>Email:
-                    <input type="email" name="email" placeholder='Enter your Email here' onChange={handleChange} required />
-                </label>
-                <br />
-                <label>Contact:
-                    <input type="tel" name="contact" placeholder='Enter your Contact no. here' onChange={handleChange} required />
-                </label>
-                <br />
-                <label>Aadhar Card Number:
-                    <input type="text" name="aadharCardNumber" placeholder='Enter your Aadhar no here' onChange={handleChange} required />
-                </label>
-                <br />
-                <label>Select Role:
+        <div className="signup-container">
+            <div className="signup-card">
+                <div className="signup-header">
+                    <FaUserCircle className="signup-icon" />
+                    <h2>Sign Up</h2>
+                </div>
+                <form onSubmit={handleSubmit} className="signup-form">
+                    <div className="input-group">
+                        <FaUser className="input-icon" />
+                        <input type="text" name="name" placeholder="Name" onChange={handleChange} required />
+                    </div>
+                    <div className="input-group">
+                        <FaUser className="input-icon" />
+                        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+                    </div>
+                    <div className="input-group">
+                        <FaEnvelope className="input-icon" />
+                        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+                    </div>
+                    <div className="input-group">
+                        <FaPhone className="input-icon" />
+                        <input type="tel" name="contact" placeholder="Contact" onChange={handleChange} required />
+                    </div>
+                    <div className="input-group">
+                        <FaIdCard className="input-icon" />
+                        <input type="text" name="aadharCardNumber" placeholder="Aadhar Card Number" onChange={handleChange} required />
+                    </div>
+                    <div className="input-group">
+                        <FaLock className="input-icon" />
+                        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+                    </div>
                     <select name="role" onChange={handleChange} value={formData.role}>
                         <option value="voter">Voter</option>
                         <option value="candidate">Candidate</option>
                     </select>
-                </label>
-                <br />
-                <label>Password:
-                    <input type="password" name="password" placeholder='Enter your Password' onChange={handleChange} required />
-                </label>
-                <br />
-                <button type="submit" className='signup-submit-button'>Submit</button>
-            </form>
+                    <button type="submit" className="signup-submit-button">Sign Up</button>
+                </form>
+            </div>
             <ToastContainer />
         </div>
     );

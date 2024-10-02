@@ -3,6 +3,7 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaUser, FaLock, FaUserCircle } from 'react-icons/fa';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -23,7 +24,6 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log('Submitting form:', formData);
             const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
                 headers: {
@@ -33,22 +33,11 @@ const Login = () => {
             });
 
             const data = await response.json();
-            console.log('Response:', response);
-            console.log('Data:', data);
-            // In both Signup.jsx and Login.jsx
-            console.log('Full response:', response);
-            console.log('Response status:', response.status);
-            console.log('Response data:', data);
-            console.log('User data:', data.user);
-            console.log('User ID:', data.user?._id);
 
-            if (response.ok ) {
+            if (response.ok) {
                 const userDataToStore = { ...data.user };
-                console.log('Attempting to store user data:', userDataToStore);
                 localStorage.setItem('user', JSON.stringify(userDataToStore));
-                console.log('Stored user data:', JSON.parse(localStorage.getItem('user')));
-
-                toast.success(`Login Successful, Welcome ${userDataToStore.name}`);
+                toast.success(`Welcome back, ${userDataToStore.name}!`);
                 setTimeout(() => navigate('/'), 2000);
             } else {
                 toast.error(data.message || 'Login failed');
@@ -60,36 +49,47 @@ const Login = () => {
     };
 
     return (
-        <div className='login'>
+        <div className='login-container'>
             <ToastContainer />
-            <form onSubmit={handleSubmit} className='login-form'>
-                <h2>Login</h2>
-                <input
-                    type="text"
-                    name="aadharCardNumber"
-                    placeholder="Aadhar Card Number"
-                    value={formData.aadharCardNumber}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <select
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                >
-                    <option value="voter">Voter</option>
-                    <option value="candidate">Candidate</option>
-                </select>
-                <button type="submit" className='login-submit-button'>Login</button>
-            </form>
+            <div className='login-card'>
+                <div className='login-header'>
+                    <FaUserCircle className='login-icon' />
+                    <h2>Login</h2>
+                </div>
+                <form onSubmit={handleSubmit} className='login-form'>
+                    <div className='input-group'>
+                        <FaUser className='input-icon' />
+                        <input
+                            type="text"
+                            name="aadharCardNumber"
+                            placeholder="Aadhar Card Number"
+                            value={formData.aadharCardNumber}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className='input-group'>
+                        <FaLock className='input-icon' />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                    >
+                        <option value="voter">Voter</option>
+                        <option value="candidate">Candidate</option>
+                    </select>
+                    <button type="submit" className='login-submit-button'>Login</button>
+                </form>
+            </div>
         </div>
     );
 };
