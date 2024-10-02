@@ -148,4 +148,46 @@ router.get('/candidates', async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+//router for voting 
+
+router.post('/vote', async (req, res) => {
+  console.log('Vote route hit');
+  const { voterAadharCardNumber, candidateAadharCardNumber } = req.body;
+  console.log('Voter Aadhar:', voterAadharCardNumber);
+  console.log('Candidate Aadhar:', candidateAadharCardNumber);
+
+  try {
+    const voter = await Voter.findOne({ aadharCardNumber: voterAadharCardNumber });
+    if (!voter) {
+      return res.status(404).json({ message: "Voter not found" });
+    }
+
+    if (voter.hasVoted) {
+      return res.status(400).json({ message: "You have already voted" });
+    }
+
+    const candidate = await Candidate.findOne({ aadharCardNumber: candidateAadharCardNumber });
+    if (!candidate) {
+      return res.status(404).json({ message: "Candidate not found" });
+    }
+
+    // Initialize voteCount if it's undefined
+    if (typeof candidate.voteCount !== 'number') {
+      candidate.voteCount = 0;
+    }
+
+    candidate.voteCount += 1;
+    await candidate.save();
+
+    voter.hasVoted = true;
+    await voter.save();
+
+    console.log(`Vote recorded. New vote count for ${candidate.name}: ${candidate.voteCount}`);
+    res.status(200).json({ message: "Vote recorded successfully", newVoteCount: candidate.voteCount });
+  } catch (error) {
+    console.error("Error in voting:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 module.exports = router;

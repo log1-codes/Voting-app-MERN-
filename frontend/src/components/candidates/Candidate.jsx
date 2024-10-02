@@ -8,6 +8,7 @@ const Candidate = () => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   useEffect(() => {
     fetchCandidates();
@@ -28,9 +29,28 @@ const Candidate = () => {
     }
   };
 
-  const handleVote = async (candidateId) => {
-    // Implement voting logic here
-    toast.info('Voting functionality not implemented yet');
+  const handleVote = async (candidateAadharCardNumber) => {
+    if (user.role !== 'voter') {
+      toast.error('Only voters can cast votes');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/auth/vote', {
+        voterAadharCardNumber: user.aadharCardNumber,
+        candidateAadharCardNumber: candidateAadharCardNumber
+      });
+
+      toast.success(response.data.message);
+      fetchCandidates(); // Refresh the candidate list to update vote counts
+      
+      // Update local user data to reflect that they've voted
+      const updatedUser = { ...user, hasVoted: true };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cast vote');
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -53,9 +73,12 @@ const Candidate = () => {
             <p><strong>Username:</strong> {candidate.username}</p>
             <p><strong>Email:</strong> {candidate.email}</p>
             <p><strong>Contact:</strong> {candidate.contact}</p>
-            <button onClick={() => handleVote(candidate._id)} className="vote-button">
-              Vote
-            </button>
+            <p><strong>Votes:</strong> {candidate.voteCount}</p>
+            {user.role === 'voter' && !user.hasVoted && (
+              <button onClick={() => handleVote(candidate.aadharCardNumber)} className="vote-button">
+                Vote
+              </button>
+            )}
           </div>
         ))}
       </div>
