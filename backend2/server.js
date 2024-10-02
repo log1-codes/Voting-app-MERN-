@@ -23,6 +23,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+// app.use('/api/candidate', require('./routes/candidate'));
 
 // Start server
 app.listen(PORT, () => {

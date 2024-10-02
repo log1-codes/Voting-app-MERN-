@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Home/Home";
+import Candidate from "./components/candidates/Candidate";
 import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter as Router,
@@ -21,6 +22,7 @@ const App = () => {
         <Navbar />
         <Routes> 
         <Route path="/" element={<Home />} />
+        <Route path="/candidates" element={<Candidate />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />

@@ -31,6 +31,7 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
             <button onClick={() => navigate("/")} className='buttons'>Home</button>
+            <button onClick={() => navigate("/candidates")} className='buttons'>Candidates</button>
             <button onClick={handleProfileClick} className='buttons profile-button'>
               <FaUser /> Profile
             </button>
@@ -39,6 +40,7 @@ const Navbar = () => {
         ) : (
           <>
             <button onClick={() => navigate("/")} className='buttons'>Home</button>
+            <button onClick={() => navigate("/candidates")} className='buttons'>Candidates</button>
 
             <button onClick={() => navigate("/login")} className='buttons'>Login</button>
             <button onClick={() => navigate("/signup")} className='buttons'>SignUp</button>

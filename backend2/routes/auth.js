@@ -3,7 +3,9 @@ const Voter = require("../Models/Voter");
 const Candidate = require("../Models/Candidate");
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-
+router.get('/test', (req, res) => {
+  res.json({ message: 'Test route is working' });
+});
 // Signup route
 router.post("/signup", async (req, res) => {
   let { name, username, email, contact, aadharCardNumber, password, role } =
@@ -68,7 +70,7 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     console.log("Compare result:", isMatch);
     if (!isMatch) {
-      return res.status(401).json({ message: "Wrong Pass" });
+      return res.status(401).json({ message: "Wrong Password " });
     }
     console.log("User Found");
     return res.status(200).json({
@@ -88,6 +90,7 @@ router.post("/login", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+///router for changing the password 
 router.put('/change-password', async (req, res) => {
   try {
     const { aadharCardNumber, currentPassword, newPassword } = req.body;
@@ -102,6 +105,7 @@ router.put('/change-password', async (req, res) => {
     
     if (!user) {
       console.log('User not found for Aadhar:', aadharCardNumber);
+      // toast.error("User not found for this aadhar number ")
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -128,7 +132,20 @@ router.put('/change-password', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.toString() });
   }
 });
-
-
-
+//router for getting the candidates 
+router.get('/candidates', async (req, res) => {
+  try {
+    console.log("Fetching candidates...");
+    let candidates = await Candidate.find({ role: "candidate" });
+    console.log("Candidates fetched successfully:", candidates);
+    
+    if (!candidates || candidates.length === 0) {
+      return res.status(404).json({ message: "No candidates found" });
+    }
+    return res.status(200).json({ candidates });
+  } catch (err) {
+    console.error("Error in fetching the candidates", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
 module.exports = router;

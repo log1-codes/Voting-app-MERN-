@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
-
+import { toast, ToastContainer } from 'react-toastify';
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -71,7 +71,8 @@ const Profile = () => {
   
       setIsChangingPassword(false);
       setPasswordData({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
-      alert('Password changed successfully');
+      toast.success("password Changed Successfully")
+      // alert('Password changed successfully');
     } catch (error) {
       console.error('Error changing password:', error);
       setPasswordError(error.message || 'An error occurred. Please try again.');
@@ -103,7 +104,9 @@ const Profile = () => {
   }
 
   return (
+    
     <div className="profile-container">
+         <ToastContainer />
       <h1>User Profile</h1>
       <div className="profile-info">
         {!isEditing ? (
