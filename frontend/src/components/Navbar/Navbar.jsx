@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { toast } from 'react-toastify';
-import { FaUser, FaBars, FaTimes, FaHome, FaUsers, FaSignInAlt, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaBars,FaPoll ,FaTimes, FaHome, FaUsers, FaSignInAlt, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const Navbar = () => {
     <>
       <li onClick={() => handleNavigation("/")}><FaHome /> Home</li>
       <li onClick={() => handleNavigation("/candidates")}><FaUsers /> Candidates</li>
+      <li onClick={() => handleNavigation("/results")}><FaPoll /> Results</li>
       {isLoggedIn ? (
         <>
           <li onClick={() => handleNavigation("/profile")}><FaUser /> Profile</li>

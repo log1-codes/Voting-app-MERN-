@@ -190,4 +190,20 @@ router.post('/vote', async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.get('/results', async (req, res) => {
+  try {
+    console.log("Fetching  Election results...");
+    let candidates = await Candidate.find({role:"candidate"}).sort({voteCount:-1});
+    console.log("Election results fetched successfully:", candidates);
+    if(!candidates || candidates.length === 0){
+      return res.status(404).json({message:"No candidates found"});
+    }
+    return res.status(200).json({candidates});
+  } catch (error) {
+    console.error("Error in fetching results:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;

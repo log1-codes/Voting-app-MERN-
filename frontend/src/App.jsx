@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
-// import Profile from "./components/Profile/Profile";
+import Results from "./components/Results/Results";
 import Profile from "./components/Profile/Profile";
 const App = () => {
   return (
@@ -23,6 +23,7 @@ const App = () => {
         <Routes> 
         <Route path="/" element={<Home />} />
         <Route path="/candidates" element={<Candidate />} />
+        <Route path="/results" element={<Results />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
