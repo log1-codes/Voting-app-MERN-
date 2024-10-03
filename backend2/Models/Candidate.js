@@ -11,6 +11,7 @@ const candidateSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ["candidate"], default: "candidate" },
   voteCount: { type: Number, default: 0 },
+  image :{type : String}
 });
 
 const Candidate = mongoose.model("Candidate", candidateSchema);

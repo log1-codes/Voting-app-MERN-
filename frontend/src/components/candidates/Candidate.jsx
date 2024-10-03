@@ -6,6 +6,34 @@ import { Link } from 'react-router-dom';
 import './Candidate.css';
 import { FaVoteYea, FaUserCircle, FaEnvelope, FaPhone, FaPoll } from 'react-icons/fa';
 
+const CandidateCard = ({ candidate, user, onVote }) => (
+  <div className="candidate-card">
+    <div className="candidate-card__image-container">
+      <img 
+        src={`https://api.dicebear.com/6.x/initials/svg?seed=${candidate.name}`} 
+        alt={candidate.name} 
+        className="candidate-card__image" 
+      />
+    </div>
+    <div className="candidate-card__content">
+      <h2 className="candidate-card__name">{candidate.name}</h2>
+      <div className="candidate-card__info">
+        <p><FaUserCircle /> {candidate.username}</p>
+        <p><FaEnvelope /> {candidate.email}</p>
+        <p><FaPhone /> {candidate.contact}</p>
+      </div>
+      <div className="candidate-card__votes">
+        <FaPoll /> Votes: {candidate.voteCount}
+      </div>
+      {user && user.role === 'voter' && !user.hasVoted && (
+        <button onClick={() => onVote(candidate.aadharCardNumber)} className="candidate-card__vote-btn">
+          <FaVoteYea /> Vote
+        </button>
+      )}
+    </div>
+  </div>
+);
+
 const Candidate = () => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,14 +46,11 @@ const Candidate = () => {
 
   const fetchCandidates = async () => {
     try {
-      console.log("Fetching candidates");
       const response = await axios.get('http://localhost:3000/api/auth/candidates');
-      console.log("Candidates fetched successfully:", response.data);
       setCandidates(response.data.candidates);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching candidates:', err);
-      console.error('Error details:', err.response);
       setError('Failed to load candidates. Please try again.');
       setLoading(false);
     }
@@ -49,9 +74,8 @@ const Candidate = () => {
       });
 
       toast.success(response.data.message);
-      fetchCandidates(); // Refresh the candidate list to update vote counts
+      fetchCandidates();
       
-      // Update local user data to reflect that they've voted
       const updatedUser = { ...user, hasVoted: true };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);
@@ -60,40 +84,27 @@ const Candidate = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
-  if (!candidates || candidates.length === 0) return <div className="no-candidates">No candidates available</div>;
+  if (loading) return <div className="candidate-loading">Loading...</div>;
+  if (error) return <div className="candidate-error">{error}</div>;
+  if (!candidates || candidates.length === 0) return <div className="candidate-empty">No candidates available</div>;
 
   return (
-    <div className="candidate-container">
+    <div className="candidates-container">
       <ToastContainer />
       <h1 className="candidate-title">Candidates</h1>
       {!user && (
-        <div className="login-message">
+        <div className="candidate-login-message">
           Please <Link to="/login">log in</Link> to vote.
         </div>
       )}
-      <div className="candidate-list">
+      <div className="candidate-grid">
         {candidates.map((candidate) => (
-          <div key={candidate._id} className="candidate-card">
-            <div className="candidate-card-inner">
-              <img 
-                src={`https://api.dicebear.com/6.x/initials/svg?seed=${candidate.name}`} 
-                alt={candidate.name} 
-                className="candidate-image" 
-              />
-              <h2 className="candidate-name">{candidate.name}</h2>
-              <p><FaUserCircle className="icon" /> {candidate.username}</p>
-              <p><FaEnvelope className="icon" /> {candidate.email}</p>
-              <p><FaPhone className="icon" /> {candidate.contact}</p>
-              <p><FaPoll className="icon" /> Votes: {candidate.voteCount}</p>
-              {user && user.role === 'voter' && !user.hasVoted && (
-                <button onClick={() => handleVote(candidate.aadharCardNumber)} className="vote-button">
-                  <FaVoteYea className="icon" /> Vote
-                </button>
-              )}
-            </div>
-          </div>
+          <CandidateCard 
+            key={candidate._id} 
+            candidate={candidate} 
+            user={user} 
+            onVote={handleVote} 
+          />
         ))}
       </div>
     </div>

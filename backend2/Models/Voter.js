@@ -10,7 +10,9 @@ const voterSchema = new mongoose.Schema({
     aadharCardNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['voter'], default: 'voter' },
-    hasVoted : {type:Boolean , default : false}
+    hasVoted : {type:Boolean , default : false},
+    image :{type : String}
+  
 });
 
  

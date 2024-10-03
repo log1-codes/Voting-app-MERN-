@@ -9,6 +9,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -17,17 +18,21 @@ const Profile = () => {
   const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
-    const fetchUserData = () => {
+    const fetchUserData = async () => {
       try {
-        const userData = JSON.parse(localStorage.getItem('user'));
-        if (userData) {
-          setUser(userData);
-          setEditedUser(userData);
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+          setUser(storedUser);
+          setEditedUser(storedUser);
         } else {
           console.error('No user data found in localStorage');
+          // Redirect to login if no user data is found
+          // You might want to use react-router's useNavigate hook for this
+          // navigate('/login');
         }
       } catch (error) {
-        console.error('Error fetching user data from localStorage:', error);
+        console.error('Error fetching user data:', error);
+        toast.error('Failed to load user data');
       }
     };
 
@@ -84,16 +89,49 @@ const Profile = () => {
     setIsEditing(true);
   };
 
-  const handleSaveProfile = () => {
-    localStorage.setItem('user', JSON.stringify(editedUser));
-    setUser(editedUser);
-    setIsEditing(false);
-    toast.success("Profile updated successfully");
+  const handleImageChange = (e) => {
+    setSelectedImage(e.target.files[0]);
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('aadharCardNumber', editedUser.aadharCardNumber);
+      formData.append('name', editedUser.name);
+      formData.append('username', editedUser.username);
+      formData.append('email', editedUser.email);
+      formData.append('contact', editedUser.contact);
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      const response = await fetch('http://localhost:3000/api/auth/edit-profile', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+
+      setUser(data.user);
+      setEditedUser(data.user);
+      setIsEditing(false);
+      setSelectedImage(null);
+      localStorage.setItem('user', JSON.stringify(data.user)); // Update localStorage
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(error.message || 'An error occurred while updating the profile');
+    }
   };
 
   const handleCancelEdit = () => {
     setEditedUser(user);
     setIsEditing(false);
+    setSelectedImage(null);
   };
 
   const handleInputChange = (e) => {
@@ -112,8 +150,8 @@ const Profile = () => {
       <div className="profile-content">
         <div className="profile-header">
           <img 
-            src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`} 
-            alt={user.name} 
+            src={user && user.image ? `http://localhost:3000/${user.image}` : `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name || 'User'}`} 
+            alt={user?.name || 'User'} 
             className="profile-image" 
           />
           <h2 className="animate-text">{user.name}</h2>
@@ -130,9 +168,13 @@ const Profile = () => {
           ) : (
             <div className="edit-form">
               <input name="name" value={editedUser.name} onChange={handleInputChange} placeholder="Name" className="animate-input" />
+              <input name="username" value={editedUser.username} onChange={handleInputChange} placeholder="Username" className="animate-input" />
               <input name="email" value={editedUser.email} onChange={handleInputChange} placeholder="Email" className="animate-input" />
               <input name="contact" value={editedUser.contact} onChange={handleInputChange} placeholder="Mobile" className="animate-input" />
-              <input name="aadharCardNumber" value={editedUser.aadharCardNumber} onChange={handleInputChange} placeholder="Aadhar Card Number" className="animate-input" />
+              <input type="file" onChange={handleImageChange} accept="image/*" className="animate-input" />
+              <div className="non-editable">
+                <span>Aadhar Card Number: {user.aadharCardNumber}</span>
+              </div>
             </div>
           )}
         </div>

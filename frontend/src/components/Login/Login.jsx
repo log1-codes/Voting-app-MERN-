@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUser, FaLock, FaUserCircle } from 'react-icons/fa';
+import axios from 'axios';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -21,30 +22,22 @@ const Login = () => {
         }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+            const response = await axios.post('http://localhost:3000/api/auth/login', {
+                aadharCardNumber: formData.aadharCardNumber,
+                password: formData.password,
+                role: formData.role
             });
 
-            const data = await response.json();
-
-            if (response.ok) {
-                const userDataToStore = { ...data.user };
-                localStorage.setItem('user', JSON.stringify(userDataToStore));
-                toast.success(`Welcome back, ${userDataToStore.name}!`);
-                setTimeout(() => navigate('/'), 2000);
-            } else {
-                toast.error(data.message || 'Login failed');
+            if (response.data.user) {
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                navigate('/');
             }
         } catch (error) {
-            console.error('Error:', error);
-            toast.error('An error occurred. Please try again.');
+            console.error('Login error:', error);
+            toast.error(error.response?.data?.message || 'Login failed');
         }
     };
 
@@ -56,7 +49,7 @@ const Login = () => {
                     <FaUserCircle className='login-icon' />
                     <h2>Login</h2>
                 </div>
-                <form onSubmit={handleSubmit} className='login-form'>
+                <form onSubmit={handleLogin} className='login-form'>
                     <div className='input-group'>
                         <FaUser className='input-icon' />
                         <input

@@ -3,6 +3,21 @@ const Voter = require("../Models/Voter");
 const Candidate = require("../Models/Candidate");
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const path = require('path');
+
+//configure multer for image upload 
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb){
+    cb(null, 'uploads/');
+  },
+  filename: function(req, file, cb){
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({storage:storage});
 router.get('/test', (req, res) => {
   res.json({ message: 'Test route is working' });
 });
@@ -82,7 +97,8 @@ router.post("/login", async (req, res) => {
         email: user.email,
         contact: user.contact,
         role: user.role,
-        aadharCardNumber: user.aadharCardNumber
+        aadharCardNumber: user.aadharCardNumber,
+        image: user.image // Include the image URL here
       },
     });
   } catch (error) {
@@ -203,6 +219,51 @@ router.get('/results', async (req, res) => {
   } catch (error) {
     console.error("Error in fetching results:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+//edit profile 
+router.put('/edit-profile', upload.single('image'), async (req, res) => {
+  try {
+    const { aadharCardNumber, name, username, email, contact } = req.body;
+
+    let user = await Voter.findOne({ aadharCardNumber });
+    if (!user) {
+      user = await Candidate.findOne({ aadharCardNumber });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user fields
+    user.name = name || user.name;
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.contact = contact || user.contact;
+    
+    // Update image if a new one was uploaded
+    if (req.file) {
+      user.image = req.file.path.replace('\\', '/'); // Ensure correct path format
+    }
+
+    await user.save();
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        contact: user.contact,
+        role: user.role,
+        aadharCardNumber: user.aadharCardNumber,
+        image: user.image
+      }
+    });
+  } catch (error) {
+    console.error('Error in edit-profile route:', error);
+    res.status(500).json({ message: 'Server error', error: error.toString() });
   }
 });
 

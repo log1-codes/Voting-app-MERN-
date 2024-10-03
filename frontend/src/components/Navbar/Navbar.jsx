@@ -18,7 +18,7 @@ const Navbar = () => {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     toast.success('Logged out successfully');
-    setTimeout(() => navigate('/'), 2000);
+    setTimeout(() => navigate('/login'), 2000);
   }
 
   const handleNavigation = (path) => {

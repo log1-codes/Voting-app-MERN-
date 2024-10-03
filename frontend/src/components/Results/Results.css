@@ -1,12 +1,10 @@
 :root {
-  --primary-color: #6c63ff;
-  --secondary-color: #4caf50;
-  --background-color: #0f0f1e;
+  --primary-color: #6C63FF;
+  --secondary-color: #4CAF50;
+  --background-color: #0F0F1E;
   --card-background: rgba(255, 255, 255, 0.05);
   --text-color: #ffffff;
   --shadow-color: rgba(0, 0, 0, 0.2);
-  --winner-gradient: linear-gradient(135deg, #ffd700, #ffa500);
-  --winner-background: linear-gradient(135deg, #4a00e0, #8e2de2);
 }
 
 .results-container {
@@ -17,27 +15,19 @@
   align-items: center;
   background-color: var(--background-color);
   color: var(--text-color);
-  position: relative;
-  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
 }
 
 .results-container::before {
-  content: "";
-  position: absolute;
+  content: '';
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-      circle at 20% 30%,
-      rgba(108, 99, 255, 0.5) 0%,
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 80% 70%,
-      rgba(76, 175, 80, 0.5) 0%,
-      transparent 30%
-    );
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(108, 99, 255, 0.5) 0%, transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(76, 175, 80, 0.5) 0%, transparent 30%);
   filter: blur(100px);
   z-index: -1;
 }
@@ -46,255 +36,269 @@
   font-size: clamp(2rem, 5vw, 4.5rem);
   font-weight: bold;
   margin-bottom: 40px;
-  text-align: center;
-  background: linear-gradient(45deg, #6c63ff, #4caf50);
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 2px 2px 4px var(--shadow-color);
-  animation: fadeInUp 1s ease-out;
+  text-align: center;
 }
 
-.results-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.loading, .error, .no-votes-message, .single-candidate-message {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: var(--text-color);
+  margin: 20px 0;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 30px;
   width: 100%;
   max-width: 1200px;
-  perspective: 1000px;
 }
 
-.result-card {
+.candidate-card {
   background-color: var(--card-background);
   border-radius: 20px;
   padding: 30px;
-  width: calc(33.33% - 20px);
-  min-width: 250px;
-  transition: transform 0.6s, box-shadow 0.3s ease;
+  text-align: center;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px var(--shadow-color);
-  transform-style: preserve-3d;
 }
 
-.result-card:hover {
-  transform: translateY(-5px) rotateY(5deg) rotateX(5deg);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+.candidate-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px var(--shadow-color);
 }
 
-.result-card.winner {
-  background: var(--winner-gradient);
-  transform: scale(1.05);
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+.candidate-rank {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
 }
 
-.result-card.winner:hover {
-  transform: scale(1.05) translateY(-5px) rotateY(5deg) rotateX(5deg);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+.candidate-image-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.candidate-image, .candidate-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.candidate-icon {
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  color: white;
 }
 
 .winner-icon {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 2.5rem;
-  color: #ffd700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  animation: pulse 2s infinite;
-  z-index: 2;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.result-card-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.candidate-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.result-card:hover .candidate-image {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
+  top: -10px;
+  right: -10px;
+  font-size: 40px;
+  color: gold;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
 }
 
 .candidate-name {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.vote-info {
   margin-bottom: 15px;
-  color: var(--primary-color);
 }
 
 .vote-count {
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: bold;
-  margin-top: 15px;
-  background: linear-gradient(45deg, #6c63ff, #4caf50);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
 }
 
-.result-card.winner .candidate-image {
-  border-color: rgba(255, 215, 0, 0.5);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-}
-.result-card.winner:hover .candidate-image {
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
-  }
-.result-card.winner .vote-count {
-  background: linear-gradient(45deg, #1e1e1e, #4a4a4a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
+.vote-label {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-left: 5px;
 }
 
-.result-card.winner .candidate-image {
-  border-color: #1e1e1e;
-  box-shadow: 0 0 20px rgba(30, 30, 30, 0.5);
+.vote-percentage-wrapper {
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
 }
 
-.position {
-  position: absolute;
-  top: 15px;
-  left: 15px;
+.vote-percentage-bar {
+  height: 100%;
   background-color: var(--primary-color);
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
+  border-radius: 5px;
+  transition: width 1s ease-out;
+}
+
+.vote-percentage-text {
+  position: absolute;
+  right: 0;
+  top: 15px;
+  font-size: 0.9rem;
   font-weight: bold;
-  font-size: 1.2rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.icon {
-  margin-right: 8px;
-  vertical-align: middle;
+.winner-card {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(108, 99, 255, 0.2));
+  border: 2px solid var(--secondary-color);
+  overflow: hidden;
 }
 
-.result-card.winner::before {
-  content: "";
+.winner-decorations {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: radial-gradient(
-      circle at 25% 25%,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 10%
-    ),
-    radial-gradient(
-      circle at 75% 75%,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 10%
-    );
-  background-size: 50px 50px;
-  animation: confetti 10s linear infinite;
-  z-index: 1;
+  pointer-events: none;
 }
 
-@keyframes confetti {
+.trophy {
+  position: absolute;
+  font-size: 40px;
+  color: gold;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+}
+
+.trophy.left {
+  top: 20px;
+  left: 20px;
+  transform: rotate(-30deg);
+}
+
+.trophy.right {
+  bottom: 20px;
+  right: 20px;
+  transform: rotate(30deg);
+}
+
+.confetti-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f0f0f0;
+  animation: confetti-fall 3s linear infinite;
+}
+
+@keyframes confetti-fall {
   0% {
-    background-position: 0 0;
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
   }
   100% {
-    background-position: 50px 50px;
-  }
-}
-
-.winner::after {
-  content: "🎉";
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  font-size: 2rem;
-  animation: celebrate 1s infinite alternate;
-}
-
-@keyframes celebrate {
-  from {
-    transform: translateY(0) rotate(0deg);
-  }
-  to {
-    transform: translateY(-10px) rotate(10deg);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
+    transform: translateY(100vh) rotate(360deg);
     opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
-@media screen and (max-width: 1200px) {
-  .result-card {
-    width: calc(50% - 20px);
+/* Generate different colors and delays for confetti */
+.confetti:nth-child(2n) {
+  background-color: var(--primary-color);
+}
+.confetti:nth-child(3n) {
+  background-color: var(--secondary-color);
+}
+.confetti:nth-child(4n) {
+  background-color: #FFD700;
+}
+.confetti:nth-child(5n) {
+  background-color: #FF69B4;
+}
+
+/* Add different delays and positions */
+@for $i from 1 through 20 {
+  .confetti:nth-child(#{$i}) {
+    left: #{random(100)}%;
+    animation-delay: -#{random(3)}s;
+    animation-duration: #{2 + random(2)}s;
   }
+}
+
+.winner-card .candidate-image-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(circle, rgba(255,215,0,0.5) 0%, rgba(255,215,0,0) 70%);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media screen and (max-width: 768px) {
-  .results-container {
-    padding-top: calc(var(--navbar-height) + 40px);
-  }
-
-  .result-card {
-    width: 100%;
-    max-width: 400px;
+  .candidates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
 
 @media screen and (max-width: 480px) {
-  .results-container {
-    padding-top: calc(var(--navbar-height) + 30px);
-  }
-
-  .results-title {
-    font-size: 2rem;
-  }
-
-  .candidate-image {
-    width: 100px;
-    height: 100px;
-  }
-
-  .candidate-name {
-    font-size: 1.5rem;
-  }
-
-  .vote-count {
-    font-size: 1.2rem;
-  }
-
-  .position {
-    font-size: 1rem;
-    padding: 5px 10px;
+  .candidates-grid {
+    grid-template-columns: 1fr;
   }
 }
