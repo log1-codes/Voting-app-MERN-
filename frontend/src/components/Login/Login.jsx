@@ -33,6 +33,8 @@ const Login = () => {
 
             if (response.data.user) {
                 localStorage.setItem('user', JSON.stringify(response.data.user));
+                // Dispatch a storage event to notify other components
+                window.dispatchEvent(new Event('storage'));
                 navigate('/');
             }
         } catch (error) {

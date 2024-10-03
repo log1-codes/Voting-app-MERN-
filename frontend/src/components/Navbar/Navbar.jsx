@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { toast } from 'react-toastify';
-import { FaUser, FaBars,FaPoll ,FaTimes, FaHome, FaUsers, FaSignInAlt, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaBars, FaPoll, FaTimes, FaHome, FaUsers, FaSignInAlt, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,8 +10,17 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    setIsLoggedIn(!!user);
+    const checkLoginStatus = () => {
+      const user = localStorage.getItem('user');
+      setIsLoggedIn(!!user);
+    };
+
+    checkLoginStatus();
+    window.addEventListener('storage', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
   }, []);
 
   const handleLogout = () => {

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaLock, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt ,FaEnvelope, FaPhone, FaIdCard, FaLock, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
@@ -26,9 +28,7 @@ const Profile = () => {
           setEditedUser(storedUser);
         } else {
           console.error('No user data found in localStorage');
-          // Redirect to login if no user data is found
-          // You might want to use react-router's useNavigate hook for this
-          // navigate('/login');
+          navigate('/login');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -37,7 +37,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleChangePassword = () => {
     setIsChangingPassword(true);
@@ -120,7 +120,8 @@ const Profile = () => {
       setEditedUser(data.user);
       setIsEditing(false);
       setSelectedImage(null);
-      localStorage.setItem('user', JSON.stringify(data.user)); // Update localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.dispatchEvent(new Event('storage'));
       toast.success("Profile updated successfully");
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -137,6 +138,12 @@ const Profile = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedUser(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event('storage'));
+    navigate('/login');
   };
 
   if (!user) {
@@ -183,6 +190,7 @@ const Profile = () => {
             <>
               <button className="btn btn-primary animate-btn" onClick={handleChangePassword}><FaLock /> Change Password</button>
               <button className="btn btn-secondary animate-btn" onClick={handleEditProfile}><FaEdit /> Edit Profile</button>
+              <button className="btn btn-danger animate-btn" onClick={handleLogout}><FaSignOutAlt /> Logout</button>
             </>
           ) : isEditing ? (
             <>
