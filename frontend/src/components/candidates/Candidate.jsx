@@ -46,7 +46,7 @@ const Candidate = () => {
 
   const fetchCandidates = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/auth/candidates');
+      const response = await axios.get('https://voting-app-backend-ujlo.onrender.com/api/auth/candidates');
       setCandidates(response.data.candidates);
       setLoading(false);
     } catch (err) {
@@ -68,7 +68,7 @@ const Candidate = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/vote', {
+      const response = await axios.post('https://voting-app-backend-ujlo.onrender.com/api/auth/vote', {
         voterAadharCardNumber: user.aadharCardNumber,
         candidateAadharCardNumber: candidateAadharCardNumber
       });
