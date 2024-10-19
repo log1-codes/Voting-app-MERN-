@@ -25,7 +25,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
+            const response = await axios.post('https://voting-app-mern-backend.onrender.com/api/auth/login', {
                 aadharCardNumber: formData.aadharCardNumber,
                 password: formData.password,
                 role: formData.role
