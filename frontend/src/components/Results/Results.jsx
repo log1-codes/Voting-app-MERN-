@@ -11,7 +11,7 @@ const CandidateCard = ({ candidate, isWinner, totalVotes, rank }) => {
       <div className="candidate-rank">{rank}</div>
       <div className="candidate-image-wrapper">
         {candidate.image ? (
-          <img src={`https://voting-app-backend-ujlo.onrender.com/${candidate.image}`} alt={candidate.name} className="candidate-image" />
+          <img src={`http://localhost:3000/${candidate.image}`} alt={candidate.name} className="candidate-image" />
         ) : (
           <FaUserAlt className="candidate-icon" />
         )}
@@ -49,7 +49,7 @@ const Results = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.get('https://voting-app-backend-ujlo.onrender.com/api/auth/results');
+        const response = await axios.get('http://localhost:3000/api/auth/results');
         setCandidates(response.data.candidates.sort((a, b) => b.voteCount - a.voteCount));
         setLoading(false);
       } catch (err) {
