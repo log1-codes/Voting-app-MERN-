@@ -58,7 +58,7 @@ const Candidate = () => {
 
   const handleVote = async (candidateAadharCardNumber) => {
     if (!user) {
-      toast.error('Please log in to vote');
+      toast.error('Plehey hdf fh  ase log in to vote');
       return;
     }
 

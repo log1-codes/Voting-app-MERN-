@@ -98,7 +98,7 @@ router.post("/login", async (req, res) => {
         contact: user.contact,
         role: user.role,
         aadharCardNumber: user.aadharCardNumber,
-        image: user.image // Include the image URL here
+        image: user.image
       },
     });
   } catch (error) {
