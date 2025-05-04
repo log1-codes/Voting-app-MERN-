@@ -8,8 +8,9 @@ const PORT = process.env.PORT || 5000; // Change to 3000 to match frontend
 
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your frontend's URL
-    optionsSuccessStatus: 200
+     origin: 'https://voting-app-65gn.onrender.com', 
+    optionsSuccessStatus: 200 ,
+    credentials: true
   };
 
 // Middleware
