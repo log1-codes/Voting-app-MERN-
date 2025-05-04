@@ -46,7 +46,7 @@ const Candidate = () => {
 
   const fetchCandidates = async () => {
     try {
-      const response = await axios.get('https://voting-app-mern-backend.onrender.com/api/auth/candidates');
+      const response = await axios.get('https://voting-app-mern-backend-2.onrender.com/api/auth/candidates');
       setCandidates(response.data.candidates);
       setLoading(false);
     } catch (err) {
@@ -68,7 +68,7 @@ const Candidate = () => {
     }
 
     try {
-      const response = await axios.post('https://voting-app-mern-backend.onrender.com/api/auth/vote', {
+      const response = await axios.post('https://voting-app-mern-backend-2.onrender.com/api/auth/vote', {
         voterAadharCardNumber: user.aadharCardNumber,
         candidateAadharCardNumber: candidateAadharCardNumber
       });
