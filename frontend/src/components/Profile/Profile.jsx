@@ -105,7 +105,7 @@ const Profile = () => {
         formData.append('image', selectedImage);
       }
 
-      const response = await fetch('https://voting-app-mern-backend.onrender.com/api/auth/edit-profile', {
+      const response = await fetch('https://voting-app-mern-backend-2.onrender.com/api/auth/edit-profile', {
         method: 'PUT',
         body: formData,
       });
@@ -157,7 +157,7 @@ const Profile = () => {
       <div className="profile-content">
         <div className="profile-header">
           <img 
-            src={user && user.image ? `https://voting-app-mern-backend.onrender.com/${user.image}` : `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name || 'User'}`} 
+            src={user && user.image ? `https://voting-app-mern-backend-2.onrender.com/${user.image}` : `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name || 'User'}`} 
             alt={user?.name || 'User'} 
             className="profile-image" 
           />
