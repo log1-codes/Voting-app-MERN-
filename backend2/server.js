@@ -14,7 +14,8 @@ const corsOptions = {
   };
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // MongoDB connection
