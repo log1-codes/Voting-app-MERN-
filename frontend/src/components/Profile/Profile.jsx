@@ -58,7 +58,7 @@ const Profile = () => {
     }
   
     try {
-      const response = await fetch('https://voting-app-mern-backend.onrender.com/api/auth/change-password', {
+      const response = await fetch('https://voting-app-mern-backend-2.onrender.com/api/auth/change-password', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
